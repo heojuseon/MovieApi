@@ -1,5 +1,7 @@
 package com.example.movieapi;
 
+import com.example.movieapi.Data.Movie_Data;
+
 import java.util.ArrayList;
 
 public class MovieList {
@@ -10,6 +12,6 @@ public class MovieList {
     String display;
 
 
-    public ArrayList<Movie> items = new ArrayList<Movie>();
+    public ArrayList<Movie_Data> items = new ArrayList<Movie_Data>();
 
 }

@@ -4,12 +4,13 @@ import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -18,10 +19,12 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.movieapi.Movie;
+import com.example.movieapi.Data.Movie_Data;
+import com.example.movieapi.MovieAdapter;
 import com.example.movieapi.MovieList;
 import com.example.movieapi.R;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -32,7 +35,8 @@ public class Tab1 extends Fragment {
 
     static RequestQueue requestQueue;
 
-    Button btn3;
+    RecyclerView recyclerView;
+    MovieAdapter movieAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -40,20 +44,19 @@ public class Tab1 extends Fragment {
         // Inflate the layout for this fragment
         ViewGroup rootView = (ViewGroup)inflater.inflate(R.layout.fragment_tab1, container, false);
 
-        btn3 = rootView.findViewById(R.id.button3);
-        btn3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        recyclerView = rootView.findViewById(R.id.recycler);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this.getContext(), LinearLayoutManager.VERTICAL, false);
+        recyclerView.setLayoutManager(layoutManager);
 
-                movieRequest();
+        movieAdapter = new MovieAdapter();
+        recyclerView.setAdapter(movieAdapter);
 
-            }
-        });
 
         if (requestQueue == null) {
             requestQueue = Volley.newRequestQueue(getContext());
         }
 
+        movieRequest();
 
         return rootView;
     }
@@ -118,19 +121,21 @@ public class Tab1 extends Fragment {
         Gson gson = new Gson();
         MovieList movieList = gson.fromJson(response, MovieList.class);
         for (int i = 0; i < movieList.items.size(); i++){
+            Movie_Data movieData = movieList.items.get(i);
 
-            Movie movie = movieList.items.get(i);
+            movieAdapter.addItem(movieData);
 
-            println(movie.title);
-            println(movie.link);
-            println(movie.image);
-            println(movie.subtitle);
-            println(movie.pubDate);
-            println(movie.director);
-            println(movie.actor);
-            println(movie.userRating);
+//            println(movieData.title);
+//            println(movieData.link);
+////            println(movieData.image);
+//            println(movieData.subtitle);
+//            println(movieData.pubDate);
+//            println(movieData.director);
+//            println(movieData.actor);
+//            println(movieData.userRating);
 
         }
+        movieAdapter.notifyDataSetChanged();
     }
 
 }

@@ -1,5 +1,9 @@
 package com.example.movieapi.Item;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.os.Handler;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -10,11 +14,16 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.movieapi.Data.Movie_Data;
 import com.example.movieapi.R;
 
+import java.io.InputStream;
+import java.net.URL;
+
 public class Movie_Item extends RecyclerView.ViewHolder {
 
-//    ImageView imageView;
+    Bitmap bitmap;
 
-    TextView img;
+    ImageView imageView;
+
+//    TextView img;
 
     TextView textView;
     TextView textView2;
@@ -25,12 +34,17 @@ public class Movie_Item extends RecyclerView.ViewHolder {
     TextView textView7;
 
 
+    //이미지 url
+    Handler handler = new Handler();
+
+
+
     public Movie_Item(@NonNull View itemView) {
         super(itemView);
 
-//        imageView = itemView.findViewById(R.id.movie_img);
+        imageView = itemView.findViewById(R.id.movie_img);
 
-        img = itemView.findViewById(R.id.movie_img);
+//        img = itemView.findViewById(R.id.movie_img);
 
         textView = itemView.findViewById(R.id.movie_title);
         textView2 = itemView.findViewById(R.id.movie_subtitle);
@@ -44,9 +58,34 @@ public class Movie_Item extends RecyclerView.ViewHolder {
 
     public void setItem(Movie_Data item) {
 
-//        imageView.setImageResource(item.getImage());
 
-        img.setText(item.getImage());
+        //이미지 url
+        // setImageURI - Uri 경로에 따른 이미지 파일을 로드한다.
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    if(item.image != null){
+                        URL url = new URL(item.image);
+                        InputStream instream = url.openStream();
+                        bitmap = BitmapFactory.decodeStream(instream);
+                        handler.post(new Runnable() {//외부쓰레드에서 메인 UI에 접근하기 위해 Handler를 사용
+                            @Override
+                            public void run() {
+                                imageView.setImageBitmap(bitmap);
+                            }
+                        });
+                    }else{
+                        imageView.setImageResource(R.drawable.movie);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        t.start();
+
+
 
         textView.setText(item.getTitle());
         textView2.setText(item.getSubtitle());
@@ -55,7 +94,6 @@ public class Movie_Item extends RecyclerView.ViewHolder {
         textView5.setText(item.getUserRating());
         textView6.setText(item.getPubDate());
         textView7.setText(item.getLink());
-
 
     }
 }

@@ -62,7 +62,7 @@ public class Tab1 extends Fragment {
     }
 
     private void movieRequest() {
-        String url = "https://openapi.naver.com/v1/search/movie.json?query=love&display=30&start=1&genre=1";
+        String url = "https://openapi.naver.com/v1/search/movie.json?query=Crayon Shin-chan&display=30&start=1&genre=15";
 
         StringRequest request = new StringRequest(  //요청을 보내기 위한 StringRequest 객체 생성
                 Request.Method.GET,

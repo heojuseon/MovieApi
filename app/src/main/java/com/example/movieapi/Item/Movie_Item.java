@@ -11,6 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.movieapi.Data.Movie_Data;
 import com.example.movieapi.R;
 
@@ -23,7 +24,6 @@ public class Movie_Item extends RecyclerView.ViewHolder {
 
     ImageView imageView;
 
-//    TextView img;
 
     TextView textView;
     TextView textView2;
@@ -32,6 +32,7 @@ public class Movie_Item extends RecyclerView.ViewHolder {
     TextView textView5;
     TextView textView6;
     TextView textView7;
+
 
 
     //이미지 url
@@ -58,10 +59,8 @@ public class Movie_Item extends RecyclerView.ViewHolder {
 
     public void setItem(Movie_Data item) {
 
-
-        //이미지 url
-        // setImageURI - Uri 경로에 따른 이미지 파일을 로드한다.
-        Thread t = new Thread(new Runnable() {
+        //이미지 url을 가져오기 위해 Thread사용
+         Thread t = new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
@@ -71,8 +70,19 @@ public class Movie_Item extends RecyclerView.ViewHolder {
                         bitmap = BitmapFactory.decodeStream(instream);
                         handler.post(new Runnable() {//외부쓰레드에서 메인 UI에 접근하기 위해 Handler를 사용
                             @Override
-                            public void run() {
+                            public void run() { // 화면에 그려줄 작업
                                 imageView.setImageBitmap(bitmap);
+
+
+                                //이미지 사이즈 조정
+                                Glide.with(imageView)
+
+                                        .load(item.image)
+
+                                        .override(500, 500)
+
+                                        .into(imageView);
+
                             }
                         });
                     }else{
@@ -84,7 +94,6 @@ public class Movie_Item extends RecyclerView.ViewHolder {
             }
         });
         t.start();
-
 
 
         textView.setText(item.getTitle());

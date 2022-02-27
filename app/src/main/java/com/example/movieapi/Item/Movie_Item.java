@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.movieapi.Data.Movie_Data;
 import com.example.movieapi.R;
+import com.example.movieapi.Tab.OnMovieItemClickListener;
 
 import java.io.InputStream;
 import java.net.URL;
@@ -40,7 +41,7 @@ public class Movie_Item extends RecyclerView.ViewHolder {
 
 
 
-    public Movie_Item(@NonNull View itemView) {
+    public Movie_Item(@NonNull View itemView, final OnMovieItemClickListener listener) {
         super(itemView);
 
         imageView = itemView.findViewById(R.id.movie_img);
@@ -54,6 +55,17 @@ public class Movie_Item extends RecyclerView.ViewHolder {
         textView5 = itemView.findViewById(R.id.movie_rating);
         textView6 = itemView.findViewById(R.id.movie_date);
         textView7 = itemView.findViewById(R.id.movie_link);
+
+        itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int position = getAdapterPosition();
+
+                if (listener != null){
+                    listener.onItemClickListener(Movie_Item.this, view, position);
+                }
+            }
+        });
 
     }
 

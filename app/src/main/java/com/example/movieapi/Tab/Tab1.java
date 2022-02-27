@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -19,6 +20,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.movieapi.DB.DataBaseHelper;
 import com.example.movieapi.Data.Movie_Data;
 import com.example.movieapi.MovieAdapter;
 import com.example.movieapi.MovieList;
@@ -26,6 +28,7 @@ import com.example.movieapi.R;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -33,10 +36,14 @@ import java.util.Map;
 
 public class Tab1 extends Fragment {
 
+
     static RequestQueue requestQueue;
 
     RecyclerView recyclerView;
     MovieAdapter movieAdapter;
+
+    DataBaseHelper dbHelper;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -52,11 +59,40 @@ public class Tab1 extends Fragment {
         recyclerView.setAdapter(movieAdapter);
 
 
+        dbHelper = new DataBaseHelper(getContext());
+
         if (requestQueue == null) {
             requestQueue = Volley.newRequestQueue(getContext());
         }
 
         movieRequest();
+
+
+
+
+        movieAdapter.setOnItemClickListener(new OnMovieItemClickListener() {
+            @Override
+            public void onItemClickListener(RecyclerView.ViewHolder holder, View view, int position) {
+                Movie_Data item = movieAdapter.getItem(position);
+
+//                if (movieDataItems.size() != 0){
+//
+//                    String title = movieDataItems.get(position).getTitle();
+//                    String link = movieDataItems.get(position).getLink();
+//                    String image = movieDataItems.get(position).getImage();
+//                    String subtitle = movieDataItems.get(position).getSubtitle();
+//                    String pubDate = movieDataItems.get(position).getPubDate();
+//                    String director = movieDataItems.get(position).getDirector();
+//                    String actor = movieDataItems.get(position).getActor();
+//                    String userRating = movieDataItems.get(position).getUserRating();
+//
+//                    dbHelper.insertRecord(title, link, image, subtitle, pubDate, director, actor, userRating);
+//                }
+                dbHelper.insertRecord(item.getTitle(), item.getLink(), item.getImage(), item.getSubtitle(), item.getPubDate(), item.getDirector(), item.getActor(), item.getUserRating());
+
+                Toast.makeText(getContext(), "선택 : " + item.getTitle(), Toast.LENGTH_LONG).show();
+            }
+        });
 
         return rootView;
     }

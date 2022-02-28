@@ -75,6 +75,7 @@ public class Tab1 extends Fragment {
             public void onItemClickListener(RecyclerView.ViewHolder holder, View view, int position) {
                 Movie_Data item = movieAdapter.getItem(position);
 
+                //잘못된 접근 방식(movieDataItems가 사용되면 안됨)
 //                if (movieDataItems.size() != 0){
 //
 //                    String title = movieDataItems.get(position).getTitle();
@@ -88,6 +89,8 @@ public class Tab1 extends Fragment {
 //
 //                    dbHelper.insertRecord(title, link, image, subtitle, pubDate, director, actor, userRating);
 //                }
+
+                //Movie_Data 의 item객체에 접근하여 insertRecord메소드 실행
                 dbHelper.insertRecord(item.getTitle(), item.getLink(), item.getImage(), item.getSubtitle(), item.getPubDate(), item.getDirector(), item.getActor(), item.getUserRating());
 
                 Toast.makeText(getContext(), "선택 : " + item.getTitle(), Toast.LENGTH_LONG).show();
